@@ -3,6 +3,7 @@
 <html>
   
   <head>
+    <title> Acclivty </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="height=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
@@ -11,18 +12,41 @@
 
   <body>
 
-    <button id = "clear">Clear</button>
-    <button id = "clear2">Img</button>
-    <button id = "clear3">OPPP</button>
+    <div id = "utilBar">
 
-    <input type="range" min="1" max="100" value="50" class="slider" id="slide1">
-    <input type="range" min="1" max="100" value="50" class="slider" id="slide2">
+      <button id = "clear" class = "butt" >Clear</button>
 
-    <button id = "clear4">Erase</button>
+      <div class = "container">
+        <div>Img:</div>
+        <input type = "text" value="" id="imgUrl">
+      </div>
 
-    <div id = "one">
-      <canvas id = "two"></canvas>
+      <button id = "toggleImage" class = "butt" >Hide Img</button>
+
+      <button id = "opacity" class = "butt" >Opacity</button>
+
+      <button id = "toggleBrush" class = "butt" >Eraser</button>
+
+      <div class = "container">
+        <div>W:&nbsp;</div>
+        <div id = "brushWidth">50</div>
+        <input type = "range" min = "1" max="250" value="50" class="slide" id="wSlider">
+      </div>
+
+      <div class = "container">
+        <div>H:&nbsp;</div>
+        <div id = "brushHeight">50</div>
+        <input type = "range" min = "1" max="250" value="50" class="slide" id="hSlider">
+      </div>
+
     </div>
+
+    <div id = "background">
+      <canvas id = "drawCanvas" class = "canvas">
+        <canvas id = "previewCanvas" class = "canvas"></canvas>
+      </canvas>
+    </div>
+
   </body>
 
 </html>
