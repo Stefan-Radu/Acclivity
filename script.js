@@ -22,7 +22,7 @@ function getAngle(x1, y1, x2, y2) {
   return alpha;
 }
 
-function drawTriangle(context, x, y, w, h, alpha, erasing) {
+function drawTriangle(context, x, y, w, h, alpha, erasing, gradientColor) {
 
   let ipp = Math.sqrt(w * w / 4 + h * h);
   let omega = Math.atan(w / (2 * h));
@@ -36,7 +36,7 @@ function drawTriangle(context, x, y, w, h, alpha, erasing) {
     y - ipp * Math.sin(alpha)
   );
 
-  if (context.canvas.id == "drawCanvas") gradient.addColorStop(0, "#2e075280");
+  if (context.canvas.id == "drawCanvas") gradient.addColorStop(0, gradientColor);
   else if (context.canvas.id = "previewCanvas") gradient.addColorStop(0, "#66666680");
 
   gradient.addColorStop(0.8, "#ffffff00");
@@ -54,7 +54,6 @@ function drawTriangle(context, x, y, w, h, alpha, erasing) {
 function clearCanvas(context, canvas) {
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 
 function downloadImage(el) {
   let canvas = document.getElementById("drawCanvas");
@@ -89,6 +88,15 @@ window.onload = function () {
   document.getElementById("imgUrl").addEventListener("change", () => {
     img = "url(\"" + document.getElementById("imgUrl").value + "\")";
     if (showImage) docBackground.style.backgroundImage = img;
+  });
+
+
+  let docGradColor = document.getElementById("gradientColor");
+  let gradientColor = docGradColor.value;
+
+  docGradColor.addEventListener("change", () => {
+    gradientColor = docGradColor.value;
+    docGradColor.style.backgroundColor = gradientColor;
   });
 
   let docTogImg = document.getElementById("toggleImage"); 
@@ -134,7 +142,7 @@ window.onload = function () {
 
   previewCanvas.addEventListener("mousedown", (e) => {
     drawing = true;
-    drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing);
+    drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing, gradientColor);
   });
 
   previewCanvas.addEventListener("mousemove", e => {
@@ -147,10 +155,10 @@ window.onload = function () {
       y = e.offsetY;
     }
 
-    if (drawing) drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing);
+    if (drawing) drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing, gradientColor);
 
     clearCanvas(previewContext, previewCanvas);
-    drawTriangle(previewContext, e.offsetX, e.offsetY, w, h, alpha, false);
+    drawTriangle(previewContext, e.offsetX, e.offsetY, w, h, alpha, false, gradientColor);
   });
 
   previewCanvas.addEventListener("mouseup", () => {
