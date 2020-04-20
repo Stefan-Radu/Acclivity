@@ -22,13 +22,24 @@ function getAngle(x1, y1, x2, y2) {
   return alpha;
 }
 
-function drawTriangle(context, x, y, w, h, alpha, out) {
+function drawTriangle(context, x, y, w, h, alpha, erasing) {
 
   let ipp = Math.sqrt(w * w / 4 + h * h);
   let omega = Math.atan(w / (2 * h));
 
-  if (out) context.globalCompositeOperation="destination-out";
+  if (erasing) context.globalCompositeOperation="destination-out";
   else context.globalCompositeOperation="source-over";
+
+  let gradient = context.createLinearGradient(
+    x, y,
+    x + ipp * Math.cos(alpha),
+    y - ipp * Math.sin(alpha)
+  );
+
+  if (context.canvas.id == "drawCanvas") gradient.addColorStop(0, "#2e075280");
+  else if (context.canvas.id = "previewCanvas") gradient.addColorStop(0, "#66666680");
+
+  gradient.addColorStop(0.8, "#ffffff00");
 
   context.beginPath();
   context.moveTo(x, y);
@@ -36,12 +47,6 @@ function drawTriangle(context, x, y, w, h, alpha, out) {
   context.lineTo(x + ipp * Math.cos(alpha + omega), y - ipp * Math.sin(alpha + omega));
   context.closePath();
 
-  let gradient = context.createLinearGradient(
-    x, y,
-    x + ipp * Math.cos(alpha),
-    y - ipp * Math.sin(alpha));
-  gradient.addColorStop(0, "#2e075280");
-  gradient.addColorStop(0.8, "#ffffff00");
   context.fillStyle = gradient;
   context.fill();
 }
@@ -54,6 +59,7 @@ window.onload = function () {
 
   const drawCanvas = document.getElementById("drawCanvas");
   const drawContext = drawCanvas.getContext("2d");
+
   const previewCanvas = document.getElementById("previewCanvas");
   const previewContext = previewCanvas.getContext("2d");
 
@@ -113,12 +119,14 @@ window.onload = function () {
     document.getElementById("brushHeight").innerText = h;
   });
 
-  drawCanvas.addEventListener("mousedown", () => {
+  drawCanvas.addEventListener("mousedown", (e) => {
     drawing = true;
+    drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing);
   });
 
   drawCanvas.addEventListener("mousemove", e => {
-    if (getDist(x, y, e.offsetX, e.offsetY) > 7.0) {
+
+    if (getDist(x, y, e.offsetX, e.offsetY) > 10.0) {
       curAlpha = getAngle(x, y, e.offsetX, e.offsetY);
       alpha -= (curAlpha - prevAlpha);
       prevAlpha = curAlpha;
@@ -127,6 +135,9 @@ window.onload = function () {
     }
 
     if (drawing) drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing);
+
+    clearCanvas(previewContext, previewCanvas);
+    drawTriangle(previewContext, e.offsetX, e.offsetY, w, h, alpha, false);
   });
 
   drawCanvas.addEventListener("mouseup", () => {

@@ -98,8 +98,9 @@ body {
 .canvas {
   position: absolute;
   left: 0;
-  top: 0;
+  right: 0;
   width: 100%;
   height: 100%;
-  cursor: url('assets/resized_cursor.png') 9 9, crosshair;
+  background-color: transparent;
+  cursor: none;
 }
