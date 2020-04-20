@@ -55,6 +55,19 @@ function clearCanvas(context, canvas) {
   context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
+function downloadImage(el) {
+  let canvas = document.getElementById("drawCanvas");
+  let context = canvas.getContext("2d");
+  let backup = context.getImageData(0, 0, canvas.width, canvas.height);
+  context.globalCompositeOperation = 'destination-over';
+  context.fillStyle = 'white';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  let img = canvas.toDataURL("image/png");
+  context.putImageData(backup, 0, 0);
+  el.href = img;
+}
+
 window.onload = function () {
 
   const drawCanvas = document.getElementById("drawCanvas");
@@ -119,12 +132,12 @@ window.onload = function () {
     document.getElementById("brushHeight").innerText = h;
   });
 
-  drawCanvas.addEventListener("mousedown", (e) => {
+  previewCanvas.addEventListener("mousedown", (e) => {
     drawing = true;
     drawTriangle(drawContext, e.offsetX, e.offsetY, w, h, alpha, erasing);
   });
 
-  drawCanvas.addEventListener("mousemove", e => {
+  previewCanvas.addEventListener("mousemove", e => {
 
     if (getDist(x, y, e.offsetX, e.offsetY) > 10.0) {
       curAlpha = getAngle(x, y, e.offsetX, e.offsetY);
@@ -140,7 +153,7 @@ window.onload = function () {
     drawTriangle(previewContext, e.offsetX, e.offsetY, w, h, alpha, false);
   });
 
-  drawCanvas.addEventListener("mouseup", () => {
+  previewCanvas.addEventListener("mouseup", () => {
     drawing = false;
   });
 }
