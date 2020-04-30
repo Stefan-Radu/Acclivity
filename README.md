@@ -15,5 +15,3 @@ Paint with triangle gradients that rotate based on mouse movement.
 * Swap between drawing and erasing
 * Change the width and/or height of your brush 
 * Download your drawing on a white background
-
-### Licence - MIT
